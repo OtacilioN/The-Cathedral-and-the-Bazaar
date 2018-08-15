@@ -93,3 +93,22 @@
   ```
   
   Without ever having to discuss it, Carl and I knew we had a common goal of having the best solution out there. The only question for either of us was whether I could establish that I was a safe pair of hands. Once I did that, he acted with grace and dispatch. I hope I will do as well when it comes my turn.
+  
+## 3 The Importance of Having Users
+
+  And so I inherited popclient. Just as importantly, I inherited popclient’s user base. Users are wonderful things to have, and not just because they demonstrate that you’re serving a need, that you’ve done something right. Properly cultivated, they can become co-developers.
+  
+  Another strength of the Unix tradition, one that Linux pushes to a happy extreme, is that a lot of users are hackers too. Because source code is available, they can be _effective_ hackers. This can be tremendously useful for shortening debugging time. Given a bit of encouragement, your users will diagnose problems, suggest fixes, and help improve the code far more quickly than you could unaided.
+  
+  ```
+  # 6 Treating your users as co-developers is your least-hassle route to
+rapid code improvement and e:ective debugging.
+  ```
+  
+  The power of this effect is easy to underestimate. In fact, pretty well all of us in the open-source world drastically underestimated how well it would scale up with number of users and against system complexity, until Linus Torvalds showed us differently
+  
+  In fact, I think Linus’s cleverest and most consequential hack was not the construction of the Linux kernel itself, but rather his invention of the Linux development model. When I expressed this opinion in his presence once, he smiled and quietly repeated something he has often said: “I’m basically a very lazy person who likes to get credit for things other people actually do.” Lazy like a fox. Or, as Robert Heinlein famously wrote of one of his characters, too lazy to fail.
+  
+  In retrospect, one precedent for the methods and success of Linux can be seen in the development of the gnu Emacs Lisp library and Lisp code archives. In contrast to the cathedral-building style of the Emacs C core and most other _gnu_ tools, the evolution of the Lisp code pool was fluid and very user-driven. Ideas and prototype modes were often rewritten three or four times before reaching a stable final form. And loosely-coupled collaborations enabled by the Internet, a la Linux, were frequent.
+  
+  Indeed, my own most successful single hack previous to fetchmail was probably Emacs vc (version control) mode, a Linux-like collaboration by email with three other people, only one of whom (Richard Stallman, the author of Emacs and founder of the **Free Software Foundation**) I have met to this day. It was a front- end for sccs, rcs and later cvs from within Emacs that oftered “one-touch” version control operations. It evolved from a tiny, crude sccs.el mode somebody else had written. And the development of vc succeeded because, unlike Emacs itself, Emacs Lisp code could go through release/test/improve generations very quickly.
