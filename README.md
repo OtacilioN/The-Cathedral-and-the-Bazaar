@@ -2,11 +2,13 @@
   
   Eric Steven Raymond cf text and copyright at: www.tuxedo.org/~esr/writings
 
-  This book is in public domain and his author is Eric Steven Raymond, this repository hosts the original version of the book, written in Markdown and hosted with :heart: at GitHub :octocat: 
+  This book is in public domain and his author is Eric Steven Raymond, this repository hosts the original version of the book, written in Markdown and hosted with :heart: at GitHub :octocat:
+  
+  Contribute with the project by translating and improving the formating by opening a **Pull Request**.
 
 ## Abstract
 
-  _I anatomize a successful open-source project, fetchmail, that was run as a deliberate test of some surprising theories about sofware engineering suggested by the history of Linux. I discuss these theories in terms of two fundamentally diferent development styles, the “cathedral” model of most of the commercial world versus the “bazaar” model of the Linux world. I show that these models derive from opposing assumptions about the nature of the sofware-debugging task. I then make a sustained argument from the Linux experience for the proposition that “Given enough eyeballs, all bugs are shallow”, suggest productive analogies with other self-correcting systems of selfish agents, and conclude with some exploration of the implications of this insight for the future of so=ware._
+  _I anatomize a successful open-source project, fetchmail, that was run as a deliberate test of some surprising theories about sofware engineering suggested by the history of Linux. I discuss these theories in terms of two fundamentally diferent development styles, the “cathedral” model of most of the commercial world versus the “bazaar” model of the Linux world. I show that these models derive from opposing assumptions about the nature of the sofware-debugging task. I then make a sustained argument from the Linux experience for the proposition that “Given enough eyeballs, all bugs are shallow”, suggest productive analogies with other self-correcting systems of selfish agents, and conclude with some exploration of the implications of this insight for the future of software._
 
 ## 1 - The Cathedral and the Bazaar
 
@@ -23,3 +25,71 @@
   By mid-1996 I thought I was beginning to understand. Chance handed me a perfect way to test my theory, in the form of an opensource project that I could consciously try to run in the bazaar style. So I did – and it was a significant success.
   
   This is the story of that project. I’ll use it to propose some aphorisms about effective open-source development. Not all of these are things I first learned in the Linux world, but we’ll see how the Linux world gives them particular point. If I’m correct, they’ll help you understand exactly what it is that makes the Linux community such a fountain of good software – and, perhaps, they will help you become more productive yourself.
+  
+## 2 - The Mail Must Get Through
+  
+  Since 1993 I’d been running the technical side of a small _free-access_ Internet service provider called Chester County InterLink (_ccil_) in West Chester, Pennsylvania. I co-founded _ccil_ and wrote our unique multiuser bulletin-board software – you can check it out by telnetting to ```locke.ccil.org```. Today it supports almost three thousand users on thirty lines. The job allowed me 24-hour-a-day access to the net through _ccil’s_ 56K line – in fact, the job practically demanded it!
+  
+  I had gotten quite used to instant Internet email. I found having to periodically telnet over to _LOCKE_ to check my mail annoying. What I wanted was for my mail to be delivered on snark (my home system) so that I would be notified when it arrived and could handle it using all my local tools.
+  
+  The Internet’s nativemail forwarding protocol, _smtp_ (SimpleMail Transfer Protocol), wouldn’t suit, because it works best when machines are connected full-time, while my personal machine isn’t always on the net, and doesn’t have a static _ip_ address. What I needed was a program that would reach out overmy intermittent dialup connection and pull across my mail to be delivered locally. I knew such things existed, and that most of them used a simple application protocol called _pop_ (Post O?ce Protocol). _pop_ is now widely supported by most common mail clients, but at the time, it wasn’t built-in to the mail reader I was using.
+
+  I needed a _pop3_ client. So I went out on the net and found one. Actually, I found three or four. I used one of them for a while, but it was missing what seemed an obvious feature, the ability to hack the addresses on fetched mail so replies would work properly.
+
+  The problem was this: suppose someone named ‘joe’ on _LOCKE_ sent me mail. If I fetched the mail to snark and then tried to reply to it, my mailer would cheerfully try to ship it to a nonexistent ‘joe’ on snark. Hand-editing reply addresses to tack on ‘@ccil.org’ quickly got to be a serious pain.
+  
+  This was clearly something the computer ought to be doing for me. But none of the existing pop clients knew how! And this brings us to the first lesson:
+  
+  ```
+# 1 Every good work of software starts by scratching a developer’s personal itch.
+  ```
+  
+  Perhaps this should have been obvious (it’s long been proverbial that “Necessity is the mother of invention”) but too often software developers spend their days grinding away for pay at programs they neither need nor love. But not in the Linux world – which may explain why the average quality of software originated in the Linux community is so high.
+  
+  So, did I immediately launch into a furious whirl of coding up a brand-new pop3 client to compete with the existing ones ? Not on your life! I looked carefully at the pop utilities I had in hand, asking myself “which one is closest to what I want?” Because
+  
+  ```
+  # 2 Good programmers know what to write. Great ones know what to rewrite (and reuse).
+  ```
+  
+  While I don’t claim to be a great programmer, I try to imitate one. An important trait of the great ones is constructive laziness. They know that you get an A not for effort but for results, and that it’s almost always easier to start from a good partial solution than from nothing at all.
+  
+  **Linus Torvalds**, for example, didn’t actually try to write Linux from scratch. Instead, he started by reusing code and ideas from Minix, a tiny Unix-like operating system for _pc_ clones. Eventually all the Minix code went away or was completely rewritten – but while it was there, it provided scaffolding for the infant that would eventually become Linux.
+  
+  In the same spirit, I went looking for an existing _pop_ utility that was reasonably well coded, to use as a development base.
+  
+  The source-sharing tradition of the Unix world has always been friendly to code reuse (this is why the _gnu_ project chose Unix as a base os, in spite of serious reservations about the os itself). The Linux world has taken this tradition nearly to its technological limit; it has terabytes of open sources generally available. So spending time looking for some else’s almost-good-enough is more likely to give you good results in the Linux world than anywhere else.
+  
+  And it did for me. With those I’d found earlier, my second search made up a total of nine candidates – fetchpop, PopTart, get-mail, gwpop, pimp, pop-perl, popc, popmail and upop. The one I first settled on was ‘fetchpop’ by Seung-Hong Oh. I put my header-rewrite feature in it, and made various other improvements which the author accepted into his 1.9 release.
+  
+  A few weeks later, though, I stumbled across the code for ‘popclieznt’ by Carl Harris, and found I had a problem. Though fetchpop had some good original ideas in it (such as its backgrounddaemon mode), it could only handle _pop3_ and was rather amateurishly coded (Seung-Hong was at that time a bright but inexperienced programmer, and both traits showed). Carl’s code was better, quite 5 professional and solid, but his program lacked several important and rather tricky-to-implement fetchpop features (including those I’d coded myself).
+
+  Stay or switch ? If I switched, I’d be throwing away the coding I’d already done in exchange for a better development base.
+  
+  A practical motive to switch was the presence ofmultiple-protocol support. pop3 is the most commonly used of the post-o?ce server protocols, but not the only one. Fetchpop and the other competition didn’t do pop2, rpop, or apop, and I was already having vague thoughts of perhaps adding **imap** (Internet Message Access Protocol, the most recently designed and most powerful post-office protocol) just for fun.
+  
+  But I had a more theoretical reason to think switching might be as good an idea as well, something I learned long before Linux.
+  
+  ```
+  # 3 “Plan to throw one away; you will, anyhow.” (Fred Brooks, “The Mythical Man-Month”, Chapter 11)
+  ```
+  
+  Or, to put it another way, you often don’t really understand the problem until after the first time you implement a solution. The second time, maybe you know enough to do it right. So if you want to get it right, be ready to start over at least once [jb].
+  
+  Well (I told myself) the changes to fetchpop had been my first try. So I switched.
+  
+  After I sent my first set of popclient patches to Carl Harris on 25 June 1996, I found out that he had basically lost interest in popclient some time before. The code was a bit dusty, with minor bugs hanging out. I had many changes to make, and we quickly agreed that the logical thing for me to do was take over the program.
+  
+  Withoutmy actually noticing, the project had escalated. No longer was I just contemplating minor patches to an existing pop client. I took on maintaining an entire one, and there were ideas bubbling in my head that I knew would probably lead to major changes. In a software culture that encourages code-sharing, this is a natural way for a project to evolve. I was acting out this principle:
+  
+  ```
+  # 4 If you have the right attitude, interesting problems will find you.
+  ```
+  
+  But Carl Harris’s attitude was even more important. He understood that
+  
+  ```
+  # 5 When you lose interest in a program, your last duty to it is to hand it o: to a competent successor.
+  ```
+  
+  Without ever having to discuss it, Carl and I knew we had a common goal of having the best solution out there. The only question for either of us was whether I could establish that I was a safe pair of hands. Once I did that, he acted with grace and dispatch. I hope I will do as well when it comes my turn.
