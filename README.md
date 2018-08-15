@@ -101,8 +101,7 @@
   Another strength of the Unix tradition, one that Linux pushes to a happy extreme, is that a lot of users are hackers too. Because source code is available, they can be _effective_ hackers. This can be tremendously useful for shortening debugging time. Given a bit of encouragement, your users will diagnose problems, suggest fixes, and help improve the code far more quickly than you could unaided.
   
   ```
-  # 6 Treating your users as co-developers is your least-hassle route to
-rapid code improvement and e:ective debugging.
+  # 6 Treating your users as co-developers is your least-hassle route to rapid code improvement and efetive debugging.
   ```
   
   The power of this effect is easy to underestimate. In fact, pretty well all of us in the open-source world drastically underestimated how well it would scale up with number of users and against system complexity, until Linus Torvalds showed us differently
